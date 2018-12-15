@@ -303,6 +303,14 @@ namespace Microsoft.Diagnostics.Tracing.Parsers
                         // Keep the table under control remove unneeded entries.  
                         state.fileIDToName.Remove(data.FileObject);
                     };
+                    // djf - keep the table under control for registry events too.
+                    Action<RegistryTraceData> onKeyDeath = delegate (RegistryTraceData data)
+                    {
+                        state.fileIDToName.Remove(data.KeyHandle);
+                    };
+                    RegistryClose += onKeyDeath;
+                    RegistryDelete += onKeyDeath;
+                    RegistryKCBDelete += onKeyDeath;
                 }
 #endif
             }
